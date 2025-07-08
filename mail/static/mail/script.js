@@ -1,34 +1,23 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-  // Use buttons to toggle between views
   document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
   document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
   document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
   document.querySelector('#compose').addEventListener('click', compose_email);
   document.querySelector('#compose-form').addEventListener('submit', send_email);
 
-  // By default, load the inbox
   load_mailbox('inbox');
 });
 
 function compose_email() {
-  // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
   document.querySelector('#email-detail-view').style.display = 'none';
 
-  // Clear out composition fields
   document.querySelector('#compose-recipients').value = '';
   document.querySelector('#compose-subject').value = '';
   document.querySelector('#compose-body').value = '';
 
-  const form = document.querySelector('#compose-form');
-  if (form) {
-    form.onsubmit = send_email;
-    console.log("Submit listener attached ✅");
-  } else {
-    console.log("❌ Could not find form");
-  }
 }
 
 function send_email(event) { 
@@ -63,12 +52,10 @@ function send_email(event) {
 function load_mailbox(mailbox) {
   console.log("Loading mailbox:", mailbox);
 
-  // Show mailbox view and hide others
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
   document.querySelector('#email-detail-view').style.display = 'none';
 
-  // Set mailbox header
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
   fetch(`/emails/${mailbox}`)
@@ -98,12 +85,10 @@ function load_mailbox(mailbox) {
 }
 
 function load_email(id) {
-  // Show the email detail view and hide others
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'none';
   document.querySelector('#email-detail-view').style.display = 'block';
 
-  // Mark the email as read
   fetch(`/emails/${id}`, {
     method: 'PUT',
     body: JSON.stringify({ read: true })
@@ -115,7 +100,6 @@ function load_email(id) {
   .then(email => {
     console.log("Viewing email:", email);
 
-    // Clear the email detail view
     document.querySelector('#email-detail-view').innerHTML = '';
 
     const container = document.createElement('div');
@@ -147,7 +131,7 @@ function load_email(id) {
       });
 
       container.appendChild(archiveButton);
-    }
+    
     const replyButton = document.createElement('button');
     replyButton.className = 'btn btn-sm btn-outline-primary mt-3';
     replyButton.innerText = 'Reply';
@@ -155,10 +139,8 @@ function load_email(id) {
     replyButton.addEventListener('click', () => {
       compose_email();
 
-      // Pre-fill fields
       document.querySelector('#compose-recipients').value = email.sender;
 
-      // Avoid duplicating "Re:" in subject
       let subject = email.subject;
       if (!subject.startsWith("Re:")) {
         subject = `Re: ${subject}`;
@@ -170,7 +152,7 @@ function load_email(id) {
     });
   
     container.appendChild(replyButton);
-
+    }
     document.querySelector('#email-detail-view').appendChild(container);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
