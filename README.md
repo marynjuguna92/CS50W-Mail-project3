@@ -5,7 +5,12 @@ This project is a web-based email client built as part of HarvardX's CS50 Web Pr
 
 The project focuses on building a single-page application using JavaScript that communicates with a Django backend via API calls.
 
----
+## Demo Video
+
+A short walkthrough demonstrating the core functionality of the application:
+
+[Watch Demo](https://youtu.be/WU94BDsN3RE)
+
 
 ## Features
 
